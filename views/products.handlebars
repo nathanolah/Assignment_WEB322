@@ -1,0 +1,14 @@
+<!-- Products Section --> 
+<section class="products-section">
+    {{#each products}}
+    <div class="productBox">
+        <h1>{{this.category}}</h1>
+        <img src={{this.image}} alt="">
+        <p>{{this.title}}</p>
+        <p>CDN$ {{this.price}}</p>
+        {{#if bestSeller}}
+            <p>Best Seller</p>
+        {{/if}}
+    </div>
+    {{/each}}
+</section>
