@@ -19,6 +19,7 @@ const products = require('./model/products');
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
 
+// Environment variable
 const HTTP_PORT = process.env.PORT || 3000; 
 
 app.use(express.static('public'));
