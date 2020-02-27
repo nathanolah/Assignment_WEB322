@@ -6,6 +6,10 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
+
+// Load the environment file
+require('dotenv').config({path:"./config/keys.env"});
+
 const app = express();
 
 // // Home data
@@ -136,7 +140,7 @@ app.use('/login', generalController);
 // });
 
 // Environment variable
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT; 
 app.listen(PORT, () => {
     console.log(`Listening on port ${ PORT }`);
 });

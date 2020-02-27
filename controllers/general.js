@@ -32,13 +32,13 @@ router.post('/signup', (req, res) => {
         errorMessage.push('You must enter your full name');
     }
     if (email == "") {
-        errorMessage.push('You must enter your email');
+        errorMessage.push('You must enter an email');
     }
     if (username == "") {
-        errorMessage.push('You must enter your username');
+        errorMessage.push('You must enter a username');
     }
     if (password == "") {
-        errorMessage.push('You must enter your password');
+        errorMessage.push('You must enter a password');
     }
 
 
@@ -50,11 +50,39 @@ router.post('/signup', (req, res) => {
         });
     }
     else {
-        res.render('signup', {
-            title: 'Sign Up',
-            logo: "img/everythingStore.jpg",
-            successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
+        // res.render('signup', {
+        //     title: 'Sign Up',
+        //     logo: "img/everythingStore.jpg",
+        //     successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
+        // });
+        
+        // using Twilio SendGrid's v3 Node.js Library
+        // https://github.com/sendgrid/sendgrid-nodejs
+        const sgMail = require('@sendgrid/mail');
+        sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+        const msg = {
+        to: `${ email }`,
+        from: `noreply@email.com`,
+        subject: 'Sign up form submit',
+        html: 
+        `Vistor's Full name ${ firstName } ${ lastName } has signed up.
+         Vistor's Email Address ${ email }
+        `,
+        };
+        sgMail.send(msg)
+        .then(()=> {
+
+            res.render('signup', {
+                title: 'Sign Up',
+                logo: "img/everythingStore.jpg",
+                successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
+            });
+
+        })
+        .catch(err=>{
+            console.log(`Error ${err}`);
         });
+        
     }
     
 });
