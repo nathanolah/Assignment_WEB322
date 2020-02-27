@@ -49,30 +49,23 @@ router.post('/signup', (req, res) => {
             errors: errorMessage
         });
     }
-    else {
-        // res.render('signup', {
-        //     title: 'Sign Up',
-        //     logo: "img/everythingStore.jpg",
-        //     successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
-        // });
-        
+    else { 
         // using Twilio SendGrid's v3 Node.js Library
         // https://github.com/sendgrid/sendgrid-nodejs
         const sgMail = require('@sendgrid/mail');
         sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
         const msg = {
         to: `${ email }`,
-        from: `noreply@email.com`,
-        subject: 'Sign up form submit',
+        from: `noreply@everythingstore.com`,
+        subject: 'Sign Up Form Submit',
         html: 
-        `Vistor's Full name ${ firstName } ${ lastName } has signed up.
-         Vistor's Email Address ${ email }
+        `Vistor's Full name ${ firstName } ${ lastName } has signed up. <br>
+         Vistor's Email Address ${ email } <br>
         `,
         };
         sgMail.send(msg)
         .then(()=> {
-
-            res.render('signup', {
+            res.render('signup', { //send to dashboard page confirmation page create that page
                 title: 'Sign Up',
                 logo: "img/everythingStore.jpg",
                 successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
