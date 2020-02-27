@@ -40,7 +40,12 @@ router.post('/signup', (req, res) => {
     if (password == "") {
         errorMessage.push('You must enter a password');
     }
-
+    if (password.length < 6 || password.length > 12) {
+        errorMessage.push('Password must 6 to 12 characters long');
+    }
+    if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/)) { // TO DO : KEEP FORM DATA AFTER SUBMIT
+        errorMessage.push('Password must contain letters and numbers');
+    }
 
     if (errorMessage.length > 0) {
         res.render('signup', {
@@ -57,23 +62,24 @@ router.post('/signup', (req, res) => {
         const msg = {
         to: `${ email }`,
         from: `noreply@everythingstore.com`,
-        subject: 'Sign Up Form Submit',
-        html: 
-        `Vistor's Full name ${ firstName } ${ lastName } has signed up. <br>
+        subject: 'Everything Store Confirmation',
+        html: // TO DO : add more to email
+        `Thank you ${ firstName } ${ lastName } for signed up with the Everyting Store. <br> 
          Vistor's Email Address ${ email } <br>
         `,
         };
         sgMail.send(msg)
         .then(()=> {
-            res.render('signup', { //send to dashboard page confirmation page create that page
+            res.render('dashboard', { 
                 title: 'Sign Up',
                 logo: "img/everythingStore.jpg",
-                successMessage: `Thank you ${ firstName } we've sent you a confirmation to ${ email }`
+                name: `${ firstName }`,
+                email: `${ email }`
             });
 
         })
         .catch(err=>{
-            console.log(`Error ${err}`);
+            console.log(`${err}`);
         });
         
     }
@@ -99,9 +105,9 @@ router.post('/login', (req, res) => {
     if (password == "") {
         errorMessage.push('You must enter a password');
     }
-    if (password.length > 1 && password.length < 6) {
-        errorMessage.push('Must be at least 6 characters long')
-    }
+    // if (password.length > 1 && password.length < 6) {
+    //     errorMessage.push('Must be at least 6 characters long')
+    // }
 
     if (errorMessage.length > 0) {
         res.render('login', {

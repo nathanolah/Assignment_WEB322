@@ -5,7 +5,7 @@ const router = express.Router();
 const products = require('../model/products');
 
 // Products Page 
-router.get('/', (req, res) => { // /products??
+router.get('/', (req, res) => { 
     res.render('products', {
         title: 'Products',
         logo: "img/everythingStore.jpg",
