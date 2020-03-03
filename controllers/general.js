@@ -69,9 +69,8 @@ router.post('/signup', (req, res) => {
         to: `${ email }`,
         from: `noreply@everythingstore.com`,
         subject: 'Everything Store Confirmation',
-        html: // TO DO : add more to email
-        `Thank you ${ firstName } ${ lastName } for signed up with the Everything Store. <br> 
-         Vistor's Email Address ${ email } <br>
+        html: 
+        `<h3>Thank you ${ firstName } ${ lastName } for signing up with the Everything Store.<h3> <br> 
         `,
         };
         sgMail.send(msg)
