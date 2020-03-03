@@ -43,7 +43,7 @@ router.post('/signup', (req, res) => {
     if (password.length < 6 || password.length > 12) {
         errorMessage.push('Password must 6 to 12 characters long');
     }
-    if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,12}$/)) { // TO DO : KEEP FORM DATA AFTER SUBMIT
+    if (!password.match(/^(?=.*\d)(?=.*[a-z]).{6,12}$/)) { 
         errorMessage.push('Password must contain letters and numbers');
     }
 
@@ -51,7 +51,13 @@ router.post('/signup', (req, res) => {
         res.render('signup', {
             title: 'Sign Up',
             logo: "img/everythingStore.jpg",
-            errors: errorMessage
+            errors: errorMessage,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            username: username,
+            password: password
+
         });
     }
     else { 
@@ -64,7 +70,7 @@ router.post('/signup', (req, res) => {
         from: `noreply@everythingstore.com`,
         subject: 'Everything Store Confirmation',
         html: // TO DO : add more to email
-        `Thank you ${ firstName } ${ lastName } for signed up with the Everyting Store. <br> 
+        `Thank you ${ firstName } ${ lastName } for signed up with the Everything Store. <br> 
          Vistor's Email Address ${ email } <br>
         `,
         };
@@ -105,9 +111,6 @@ router.post('/login', (req, res) => {
     if (password == "") {
         errorMessage.push('You must enter a password');
     }
-    // if (password.length > 1 && password.length < 6) {
-    //     errorMessage.push('Must be at least 6 characters long')
-    // }
 
     if (errorMessage.length > 0) {
         res.render('login', {
