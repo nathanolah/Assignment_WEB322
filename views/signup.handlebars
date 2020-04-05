@@ -6,7 +6,7 @@
 
     <div class="successMessage">{{successMessage}}</div>
     
-    <form action="/signup" method="POST">
+    <form action="/user/signup" method="POST">
         <ul class="form-style-1">
             <li>
                 <label for="fullName">Full Name<span class="required">*</span></label>
@@ -18,13 +18,14 @@
                 <input type="email" name="email" id="email" class="field-long" value="{{email}}">
             </li>
             <li>
-                <label for="username">Username<span class="required">*</span></label>
-                <input type="text" name="username" id="username" class="field-long" value="{{username}}">
-            </li>
-             <li>
                 <label for="password">Password<span class="required">*</span></label>
                 <input type="password" name="password" id="password" class="field-long" value="{{password}}">
             </li>
+            <li>
+                <label for="password">Confirm Password<span class="required">*</span></label>
+                <input type="password" name="cpassword" id="cpassword" class="field-long" value="{{cpassword}}">
+            </li>
+
             <li>
                 <input type="submit" value="Sign Up">
             </li>

@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 // Products model
-const products = require('../model/products');
+const products = require('../models/products');
 
 // Products Page 
-router.get('/', (req, res) => { 
+router.get('/', (req, res) => {
     res.render('products', {
         title: 'Products',
         logo: "img/everythingStore.jpg",
