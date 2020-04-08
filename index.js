@@ -34,16 +34,42 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 ////////////////////////////////////
+
+
+/*
+    This is to allow specific forms and/or links that were submitted/pressed
+    to send PUT and DELETE request respectively!!!!!!!
+*/
+app.use((req, res, next) => { // next means to move to the next middleware function
+
+    if (req.query.method == "PUT") {
+        req.method = "PUT"
+    }
+
+    else if (req.query.method == "DELETE") {
+        req.method = "DELETE"
+    }
+
+    next(); // if you do not call the next() then you'll never move on to the route
+})
+
+
+
 app.use(fileUpload());
 
-app.use(session({ secret: `${process.env.SESSION_SECRET}`, resave: false, saveUninitialized: true }));  // WHAT IS THIS 
+app.use(session({
+    secret: `${process.env.SESSION_KEY}`,
+    resave: false,
+    saveUninitialized: true
+    //cookie: { secure: true } 
+}))
 
 //custom middleware functions
 app.use((req, res, next) => {
-
     //res.locals.user is a global handlebars variable. This means that ever single handlebars file can access 
     //that user variable
     res.locals.user = req.session.user;
+
     next();
 });
 

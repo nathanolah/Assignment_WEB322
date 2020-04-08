@@ -1,0 +1,63 @@
+<!-- Products Section -->
+<h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+
+{{#if user}}
+    <a href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a>
+    <a href="/user/logout">Logout </a>
+{{/if}}
+
+{{!-- ADD SEARCH HERE --}}
+{{!-- <label>Search Product Category</label>
+<select name="searchproductCategory" id="searchproductCategory">
+    <option value="Household Supplies">Household Supplies</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Tools">Tools</option>
+</select>
+<br><br> --}}
+
+{{!-- ADD SEARCH BUTTON WITH LINK TO --}}
+
+{{#if user.inventoryClerk}}
+    <section class="products-section">
+        {{#each products}}
+        <div class="productBox">
+
+            <h1>{{this.productCategory}}</h1> 
+            <img src="/uploads/{{this.productPic}}" alt="">
+            <h1>{{this.productName}}</h1>
+            <p>{{this.productDesc}}</p>
+            <p>${{this.productPrice}}</p>
+            <p>Quantity: {{this.productQuantity}}</p> 
+            {{#if this.bestSeller}} 
+                <p>Best Seller</p>
+            {{/if}}
+
+            <a href="/products/edit/{{this._id}}" class="edit-delete-button">Edit</a>
+            <a href="/products/delete/{{this._id}}?method=DELETE" class="edit-delete-button">Delete</a>
+
+        </div>
+        {{/each}}
+
+    </section>
+{{else}}
+
+    <section class="products-section">
+        {{#each products}}
+        <div class="productBox">
+
+            <h1>{{this.productCategory}}</h1>
+            <img src="/uploads/{{this.productPic}}" alt="">
+            <h1>{{this.productName}}</h1>
+            <p>{{this.productDesc}}</p>
+            <p>${{this.productPrice}}</p>
+            <p>Quantity: {{this.productQuantity}}</p>
+            {{#if this.bestSeller}}
+                <p>Best Seller</p>
+            {{/if}}
+
+        </div>
+        {{/each}}
+
+    </section>
+
+{{/if}}

@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const isLoggedIn = require('../middleware/auth');
 
 // User Model
 const userModel = require('../models/User');
@@ -63,53 +64,81 @@ router.post('/signup', (req, res) => {
 
     }
     else {
-        /* Inserts into Database */
 
-        // Create new user object
-        const newUser = {
-            firstName: firstName,
-            lastName: lastName,
-            email: email, // TO DO : add error message if email is not unique
-            password: password
-        }
+        // Checks for an existing email
+        userModel.findOne({ email: req.body.email })
+            .then(user => {
+                if (user != null) {
+                    errorMessage.push('Email already exists');
+                    res.render('signup', {
+                        title: 'Sign Up',
+                        logo: "../img/everythingStore.jpg",
+                        // Keeps values in the form
+                        errors: errorMessage,
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        username: username,
+                        password: password,
+                        cpassword: cpassword
+                    });
 
-        const signup = new userModel(newUser);
-        signup.save() // Insert document into collection
-            .then((user) => {
+                }
+                else {
+                    /* Inserts into Database */
 
-                // vvvvv CONTINUE THIS AFTER YOU MAKE THE LOGIN
-                // validate unique email
+                    // Create new user object
+                    const newUser = {
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email, 
+                        password: password
+                    }
 
-                req.session.user = user;
-                res.redirect(`/user/confirm/${user._id}`);
+                    const signup = new userModel(newUser);
+                    signup.save() // Insert document into collection
+                        .then((user) => {
+                            
+                            // Create session
+                            req.session.user = user;
+                            res.redirect(`/user/confirm/${user._id}`);
 
-                // ^^^ MOVE THIS TO THE THEN() OF SEND EMAIL??
-                //////////////////////////////////////////
-
-
-                /**** Confirmation Email ****/
-                // using Twilio SendGrid's v3 Node.js Library
-                // https://github.com/sendgrid/sendgrid-nodejs
-                const sgMail = require('@sendgrid/mail');
-                sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
-                const msg = {
-                    to: `${email}`,
-                    from: `noreply@everythingstore.com`,
-                    subject: 'Everything Store Confirmation',
-                    html:
-                        `<h3>Thank you ${firstName} ${lastName} for signing up with the Everything Store.<h3> <br> 
-                    `,
-                };
-                // Sends email
-                sgMail.send(msg)
-                    .then(() => { console.log(`Email has been sent`) })
-                    .catch(err => { console.log(`${err}`) });
+                            // ^^^ MOVE THIS TO THE THEN() OF SEND EMAIL??
+                            //////////////////////////////////////////
 
 
-                console.log(`inserted into database`);
+                            /**** Confirmation Email ****/
+                            // using Twilio SendGrid's v3 Node.js Library
+                            // https://github.com/sendgrid/sendgrid-nodejs
+                            const sgMail = require('@sendgrid/mail');
+                            sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+                            const msg = {
+                                to: `${email}`,
+                                from: `noreply@everythingstore.com`,
+                                subject: 'Everything Store Confirmation',
+                                html:
+                                    `<h3>Thank you ${firstName} ${lastName} for signing up with the Everything Store.<h3> <br> 
+                                `,
+                            };
+                            // Sends email
+                            sgMail.send(msg)
+                                .then(() => { 
+                                    
+                                    
+                                    console.log(`Email has been sent`) })
+                                .catch(err => { console.log(`${err}`) });
+
+
+                            console.log(`inserted into database`);
+
+                        })
+                        .catch(err => console.log(`DB Error has occured ${err}`));
+
+                }
+
 
             })
-            .catch(err => console.log(`DB Error has occured ${err}`)); // CATCH THE ERROR FOR THE UNIQUE EMAIL ERROR AND DISPLAY MESSAGE?
+            .then(err => console.log(`${err}`));
 
     }
 
@@ -156,7 +185,7 @@ router.post('/login', (req, res) => {
 
                 // If no matching email found
                 if (user == null) {
-                    errorMessage.push(`Sorry your email does not exist`);
+                    errorMessage.push(`Sorry, your email does not exist`);
 
                     res.render('login', {
                         title: 'Login',
@@ -178,7 +207,7 @@ router.post('/login', (req, res) => {
 
                             }
                             else {
-                                errorMessage.push('Incorrect password');
+                                errorMessage.push('Sorry, your email and/or password is incorrect');
                                 res.render('login', {
                                     title: 'Login',
                                     logo: "../img/everythingStore.jpg",
@@ -215,12 +244,9 @@ router.get("/confirm/:id", (req, res) => {
     });
 })
 
-// Profile Route
-router.get("/profile/:id", (req, res) => {
-
-    // check if the session has been destroyed??
-
-
+// Profile Route //CHANGE TRY WITHOUT ID
+router.get("/profile/:id", isLoggedIn, (req, res) => {
+    
     userModel.findById(req.params.id)
         .then((user) => {
             if (user.inventoryClerk == true) {

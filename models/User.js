@@ -45,13 +45,6 @@ const userSchema = new Schema({
 
 });
 
-// validate email // CHECK IF EMAIL ALREADY EXISTS
-// userSchema.pre('save', function(next) {
-//     if (this.email)
-
-// });
-
-
 // Encrypt user password
 userSchema.pre('save', function (next) {
     
