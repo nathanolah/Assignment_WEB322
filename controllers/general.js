@@ -1,18 +1,40 @@
 const express = require('express');
 const router = express.Router();
 
-// Home models
-const productsCategory = require('../models/productsCategory');
-const bestSeller = require('../models/bestSeller');
+// Products Model
+const productsModel = require('../models/products');
 
-// Home Page 
 router.get('/', (req, res) => {
-    res.render('home', {
-        title: 'Home',
-        logo: "img/everythingStore.jpg",
-        productsCategory: productsCategory.getAllProducts(),
-        bestSeller: bestSeller.getAllProducts()
-    });
+    productsModel.find()
+        .then((products) => {
+
+            const filteredProduct = products.map(product => {
+
+                return {
+                    _id: product._id,
+                    productName: product.productName,
+                    productPrice: product.productPrice,
+                    productDesc: product.productDesc,
+                    productCategory: product.productCategory,
+                    productQuantity: product.productQuantity,
+                    bestSeller: product.bestSeller,
+                    productPic: product.productPic
+
+                }
+
+            })
+
+            res.render('home', {
+                title: 'Home',
+                logo: "img/everythingStore.jpg",
+                products: filteredProduct
+            });
+
+        })
+        .catch(err => console.log(`${err}`));
+
+
 });
+
 
 module.exports = router;

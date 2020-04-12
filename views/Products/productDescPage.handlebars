@@ -1,0 +1,51 @@
+{{!-- PRODUCT DESCRIPTION PAGE --}}
+
+{{#if user}}
+
+{{/if}}
+
+<section class="products-section">
+
+    <div class="productBox">
+        <h1>{{this.productCategory}}</h1>
+        <img src="/uploads/{{this.productPic}}" alt="">
+    </div>
+
+    <div>
+        <h1>{{this.productName}}</h1>
+        <p>{{this.productDesc}}</p>
+        <p>${{this.productPrice}}</p>
+        <p>Quantity: {{this.productQuantity}}</p>
+        {{#if this.bestSeller}}
+        <p>Best Seller</p>
+        {{/if}}
+        
+        <br>
+
+        <div>
+
+            {{#if user}}
+            <form action="../../user/shoppingCart/{{user._id}}" method="POST">
+                <input type="hidden" id="productId" name="productId" value="{{this._id}}">
+                <input type="hidden" id="productName" name="productName" value="{{this.productName}}">
+                <input type="hidden" id="productCategory" name="productCategory" value="{{this.productCategory}}">
+                <input type="hidden" id="productDesc" name="productDesc" value="{{this.productDesc}}">
+                <input type="hidden" id="productPic" name="productPic" value="{{this.productPic}}">
+                <input type="hidden" id="productPrice" name="productPrice" value="{{this.productPrice}}">
+                <input type="hidden" id="productQuantity" name="productQuantity" value="{{this.productQuantity}}">
+
+                <input type="submit" class="btn" value="Add to Cart">
+                <br><br>
+
+            </form>
+            {{else}}
+            <a href="../../user/login" class="btn">Add to Cart</a>
+            <br><br>
+            {{/if}}
+            <a href="/products" class="btn">Go back</a>
+
+        </div>
+    </div>
+
+
+</section>

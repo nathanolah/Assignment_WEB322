@@ -15,10 +15,6 @@ require('dotenv').config({ path: "./config/keys.env" });
 
 const generalController = require('./controllers/general');
 const productsController = require('./controllers/products');
-
-//const signupController = require('./controllers/signup');
-//const loginController = require('./controllers/login');
-
 const userController = require('./controllers/user');
 
 const app = express();
@@ -33,13 +29,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-////////////////////////////////////
-
-
-/*
-    This is to allow specific forms and/or links that were submitted/pressed
-    to send PUT and DELETE request respectively!!!!!!!
-*/
 app.use((req, res, next) => { // next means to move to the next middleware function
 
     if (req.query.method == "PUT") {
@@ -73,12 +62,8 @@ app.use((req, res, next) => {
     next();
 });
 
-//////////////////////////////////////
-
 app.use('/', generalController);
 app.use('/products', productsController);
-//app.use('/signup', signupController);
-//app.use('/login', loginController);
 app.use('/user', userController);
 
 // Promise operation asynchronous 

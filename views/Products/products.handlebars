@@ -1,50 +1,39 @@
 <!-- Products Section -->
-<h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
 
-{{#if user}}
-    <a href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a>
-    <a href="/user/logout">Logout </a>
-{{/if}}
+<div>
+    {{#if user}}
+    <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+    {{!-- display a shopping cart link --}}
+    <a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
+    {{/if}}
+    <br><br>
+</div>
 
-{{!-- ADD SEARCH HERE --}}
-{{!-- <label>Search Product Category</label>
-<select name="searchproductCategory" id="searchproductCategory">
-    <option value="Household Supplies">Household Supplies</option>
-    <option value="Electronics">Electronics</option>
-    <option value="Tools">Tools</option>
-</select>
-<br><br> --}}
+<div class="divSearch">
+    {{!-- Search --}}
+    <form method="POST" action="/products/search">
 
-{{!-- ADD SEARCH BUTTON WITH LINK TO --}}
+        <label>
+            <h3>Search Product Category</h3>
+        </label>
+        <select name="searchProductCategory" id="searchProductCategory">
+            <option value="Household Supplies">Household Supplies</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Tools">Tools</option>
+            <option value="All Categories">All Categories</option>
+        </select>
+
+        <input type="submit" value="Search">
+
+    </form>
+    <br>
+</div>
 
 {{#if user.inventoryClerk}}
-    <section class="products-section">
-        {{#each products}}
-        <div class="productBox">
-
-            <h1>{{this.productCategory}}</h1> 
-            <img src="/uploads/{{this.productPic}}" alt="">
-            <h1>{{this.productName}}</h1>
-            <p>{{this.productDesc}}</p>
-            <p>${{this.productPrice}}</p>
-            <p>Quantity: {{this.productQuantity}}</p> 
-            {{#if this.bestSeller}} 
-                <p>Best Seller</p>
-            {{/if}}
-
-            <a href="/products/edit/{{this._id}}" class="edit-delete-button">Edit</a>
-            <a href="/products/delete/{{this._id}}?method=DELETE" class="edit-delete-button">Delete</a>
-
-        </div>
-        {{/each}}
-
-    </section>
-{{else}}
-
-    <section class="products-section">
-        {{#each products}}
-        <div class="productBox">
-
+<section class="products-section">
+    {{#each products}}
+    <div class="productBox">
+        <a class="aProductBox" style="display:block" href="/products/productdesc/{{this._id}}">
             <h1>{{this.productCategory}}</h1>
             <img src="/uploads/{{this.productPic}}" alt="">
             <h1>{{this.productName}}</h1>
@@ -52,12 +41,58 @@
             <p>${{this.productPrice}}</p>
             <p>Quantity: {{this.productQuantity}}</p>
             {{#if this.bestSeller}}
-                <p>Best Seller</p>
+            <p>Best Seller</p>
             {{/if}}
 
-        </div>
-        {{/each}}
+            <a href="/products/edit/{{this._id}}" class="btn">Edit</a>
+            <a href="/products/delete/{{this._id}}?method=DELETE" class="btn">Delete</a>
+        </a>
+    </div>
+    {{/each}}
+</section>
+{{else}}
+{{#if user}}
+<section class="products-section">
+    {{#each products}}
+    <div class="productBox">
 
-    </section>
+        <a class="aProductBox" style="display:block" href="/products/productdesc/{{this._id}}">
+            <h1>{{this.productCategory}}</h1>
+            <img src="/uploads/{{this.productPic}}" alt="">
+            <h1>{{this.productName}}</h1>
+            <p>{{this.productDesc}}</p>
+            <p>${{this.productPrice}}</p>
+            <p>Quantity: {{this.productQuantity}}</p>
+            {{#if this.bestSeller}}
+            <p>Best Seller</p>
+            {{/if}}
+
+        </a>
+    </div>
+    {{/each}}
+
+</section>
+{{else}}
+<section class="products-section">
+    {{#each products}}
+    <div class="productBox">
+
+        <a class="aProductBox" style="display:block" href="/products/productdesc/{{this._id}}">
+            <h1>{{this.productCategory}}</h1>
+            <img src="/uploads/{{this.productPic}}" alt="">
+            <h1>{{this.productName}}</h1>
+            <p>{{this.productDesc}}</p>
+            <p>${{this.productPrice}}</p>
+            <p>Quantity: {{this.productQuantity}}</p>
+            {{#if this.bestSeller}}
+            <p>Best Seller</p>
+            {{/if}}
+        </a>
+
+    </div>
+    {{/each}}
+</section>
+
+{{/if}}
 
 {{/if}}

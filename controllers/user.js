@@ -6,12 +6,11 @@ const isLoggedIn = require('../middleware/auth');
 
 // User Model
 const userModel = require('../models/User');
+
+// Cart Model
+const cartModel = require('../models/Cart');
+
 const bcrypt = require('bcryptjs');
-
-// TO DO : TRY CONNECTING TO HEROKU
-
-// WITHIN THE SESSION vvvvv
-// AFTER MAKE INVENTORY CLERK SESSION AND CAN USE CRUD OPERATIONS ON THE PRODUCTS IN THE INVENTORY // assignment 4
 
 // Sign Up Routes
 router.get('/signup', (req, res) => {
@@ -91,21 +90,17 @@ router.post('/signup', (req, res) => {
                     const newUser = {
                         firstName: firstName,
                         lastName: lastName,
-                        email: email, 
+                        email: email,
                         password: password
                     }
 
                     const signup = new userModel(newUser);
                     signup.save() // Insert document into collection
                         .then((user) => {
-                            
+
                             // Create session
                             req.session.user = user;
                             res.redirect(`/user/confirm/${user._id}`);
-
-                            // ^^^ MOVE THIS TO THE THEN() OF SEND EMAIL??
-                            //////////////////////////////////////////
-
 
                             /**** Confirmation Email ****/
                             // using Twilio SendGrid's v3 Node.js Library
@@ -122,10 +117,11 @@ router.post('/signup', (req, res) => {
                             };
                             // Sends email
                             sgMail.send(msg)
-                                .then(() => { 
-                                    
-                                    
-                                    console.log(`Email has been sent`) })
+                                .then(() => {
+
+
+                                    console.log(`Email has been sent`)
+                                })
                                 .catch(err => { console.log(`${err}`) });
 
 
@@ -226,16 +222,25 @@ router.post('/login', (req, res) => {
     }
 });
 
-// HOW DO YOU PROTECT USER._ID ROUTES FROM BEING REACCESSED??
 
-// TO DO : vvvvvv
-// The logout link must destroy the session created when the user initially authenticated.
-// Specific routes can only be accessed when users are logged-in, thus those routes must be protected.
+router.post('/shoppingCart/:id', (req, res) => {
+    // pass the id of the product to the shoppingcart array
+    // each user has a shopping cart
+    
+    const { _id, productId, productName, productDesc, productCategory, productPic, productPrice, productQuantity } = req.body;
+
+    //console.log(req.body.productName);
+
+
+    cartModel.findById({id:req.params.id})
+        
+
+
+});
+
 
 // Confirmation Route
 router.get("/confirm/:id", (req, res) => {
-
-    // check if the session has been destroyed??
 
     res.render("confirmDashboard", {
         title: 'Sign Up',
@@ -244,9 +249,9 @@ router.get("/confirm/:id", (req, res) => {
     });
 })
 
-// Profile Route //CHANGE TRY WITHOUT ID
+// Profile Route 
 router.get("/profile/:id", isLoggedIn, (req, res) => {
-    
+
     userModel.findById(req.params.id)
         .then((user) => {
             if (user.inventoryClerk == true) {

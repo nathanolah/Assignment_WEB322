@@ -1,26 +1,14 @@
 <h2>Inventory Clerk</h2>
-<h2>Welcome {{user.firstName}} {{user.lastName}}</h2>
-
-<!-- User Profile pic will go here-->
-{{!-- <img src="/uploads/{{user.profilePic}}">  --}}
-
-{{!-- Add Product --}}
-{{!-- CONTINUE ON THIS  --}}
-
-{{!-- clerks will have access to the tasks module --}}
 <div>
-    {{!-- add the product to appear on the products page --}}
-
-    <a href="/products/add">Add a Product</a>
-
+    <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+    {{#if user}}
+    <a class="btn" href="/user/logout">Logout </a>
+    {{/if}}
+    <br><br>
 </div>
 
+<div>
+    {{!-- add the product to appear on the products page --}}
+    <a class="btn" href="/products/add">Add a Product</a>
 
-
-{{#if user}}
-<li><a href="/user/profile">{{user.firstName}}'s Profile</a></li>
-<li><a href="/user/logout">Logout </a></li>
-{{else}}
-<li><a href="/user/login">Login</a></li>
-<li><a href="/user/signup">Registration </a></li>
-{{/if}}
+</div>

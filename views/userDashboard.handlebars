@@ -1,17 +1,6 @@
-<h2>Welcome {{user.firstName}} {{user.lastName}}</h2>
-
-
-<!-- User Profile pic will go here-->
-{{!-- <img src="/uploads/{{user.profilePic}}">  --}}
-
-
-
-{{!-- if user then display profile and logout on dashboard --}}
-
-{{#if user}}
-<li><a href="/user/profile">{{user.firstName}}'s Profile</a></li>
-<li><a href="/user/logout">Logout </a></li>
-{{else}}
-<li><a href="/user/login">Login</a></li>
-<li><a href="/user/signup">Registration </a></li>
-{{/if}}
+<div>
+    <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+    <a class="btn" href="#">Shopping Cart</a>
+    <a class="btn" href="/user/logout">Logout</a>
+    <br><br>
+</div>

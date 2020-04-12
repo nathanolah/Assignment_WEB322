@@ -1,3 +1,13 @@
+<div>
+    {{#if user}}
+    <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+    {{!-- display a shopping cart link --}}
+    <a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
+    {{/if}}
+    <br><br>
+</div>
+
+
 <!-- Top Container -->
 <section class="topContainer">
     <!-- Header -->
@@ -26,24 +36,30 @@
 <!-- Boxes Section -->
 <!-- Product Category Section -->
 <section class="boxes">
-    {{#each productsCategory}}
-    <div class="box">
-        <h3>{{this.title}}</h3>
-        <img src={{this.image}} alt="">
-        <a href="#" class=btn>Explore now</a>
-    </div>
+
+
+    {{!-- ONLY DISPLAY 5 PRODUCTS --}}
+    
+    {{#each products}}
+        <div class="box">
+        <h3>{{this.productCategory}}</h3>
+        <img src="uploads/{{this.productPic}}" alt="">
+        <a href="/products" class=btn>Explore now</a>
+        </div>
     {{/each}}
+
 </section>
 
 <!-- Best Seller Section -->
 <h3>Best Sellers</h3>
 <section class="bestSeller">
-    {{#each bestSeller}}
-        {{!-- {{#if this.bestSeller}} --}}
+    {{!-- ONLY DISPLAY 5 PRODUCTS --}}
+    {{#each products}}
+        {{#if this.bestSeller}}
             <div class="box">
-                <img src={{this.image}} alt="">
+                <img src="uploads/{{this.productPic}}" alt="">
             </div>
-        {{!-- {{/if}} --}}
+        {{/if}}
     {{/each}}    
     <a href="/products">Shop now</a>
 </section>
