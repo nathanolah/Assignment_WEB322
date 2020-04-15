@@ -1,12 +1,16 @@
 <div>
     {{#if user}}
-    <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
-    {{!-- display a shopping cart link --}}
-    <a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
+        {{#if user.inventoryClerk}}
+            <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+            <a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
+        {{else}}
+            <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
+            <a class="btn" href="/shoppingcart/{{user._id}}">Shopping Cart {{session.cart.totalQuantity}}</a>
+            <a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
+        {{/if}}
     {{/if}}
     <br><br>
 </div>
-
 
 <!-- Top Container -->
 <section class="topContainer">
@@ -36,10 +40,6 @@
 <!-- Boxes Section -->
 <!-- Product Category Section -->
 <section class="boxes">
-
-
-    {{!-- ONLY DISPLAY 5 PRODUCTS --}}
-    
     {{#each products}}
         <div class="box">
         <h3>{{this.productCategory}}</h3>
@@ -53,7 +53,6 @@
 <!-- Best Seller Section -->
 <h3>Best Sellers</h3>
 <section class="bestSeller">
-    {{!-- ONLY DISPLAY 5 PRODUCTS --}}
     {{#each products}}
         {{#if this.bestSeller}}
             <div class="box">

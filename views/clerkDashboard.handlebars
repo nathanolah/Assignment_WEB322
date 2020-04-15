@@ -2,13 +2,10 @@
 <div>
     <h1>Welcome {{user.firstName}} {{user.lastName}}</h1>
     {{#if user}}
-    <a class="btn" href="/user/logout">Logout </a>
+        {{#if user.inventoryClerk}}
+            <a class="btn" href="/products/add">Add a Product</a>
+            <a class="btn" href="/user/logout">Logout </a>
+        {{/if}}
     {{/if}}
     <br><br>
-</div>
-
-<div>
-    {{!-- add the product to appear on the products page --}}
-    <a class="btn" href="/products/add">Add a Product</a>
-
 </div>

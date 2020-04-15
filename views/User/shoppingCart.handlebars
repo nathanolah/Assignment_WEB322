@@ -1,24 +1,33 @@
 <h1>{{user.firstName}}'s Shopping Cart</h1>
 
+<section class="products-section">
+    {{#if products}}
+    {{#each products}}
+    <div class="productBox">
 
+        <h1>{{products.productCategory}}</h1>
+        <img src="/uploads/{{products.productPic}}" alt="">
+        <h1>{{products.productName}}</h1>
+        <p>{{products.productDesc}}</p>
+        <p>${{products.productPrice}}</p>
+        <p>Quantity: {{qty}}</p>
+        {{#if products.bestSeller}}
+        <p>Best Seller</p>
+        {{/if}}
 
- {{!-- <section class="products-section">
-        {{#each products}}
-        <div class="productBox">
-            <a class="aProductBox" style="display:block" href="/products/productdesc/{{this._id}}">
-                <h1>{{this.productCategory}}</h1> 
-                <img src="/uploads/{{this.productPic}}" alt="">
-                <h1>{{this.productName}}</h1>
-                <p>{{this.productDesc}}</p>
-                <p>${{this.productPrice}}</p>
-                <p>Quantity: {{this.productQuantity}}</p> 
-                {{#if this.bestSeller}} 
-                    <p>Best Seller</p>
-                {{/if}}
+        {{!-- <a href="/reduce/{{products._id}}" class="btn">Reduce</a> --}}
+        <a href="/remove/{{products._id}}" class="btn">Remove</a>
 
-                <a href="/products/edit/{{this._id}}" class="edit-delete-button">Edit</a>
-                <a href="/products/delete/{{this._id}}?method=DELETE" class="edit-delete-button">Delete</a>
-            </a>
-        </div>
-        {{/each}}
-    </section> --}}
+    </div>
+    {{/each}}
+    {{else}}
+        <h1>No Items in Cart</h1>
+    {{/if}}
+</section>
+
+<div>
+    <h1>Order Total: CDN$ {{totalPrice}}.00</h1>
+    <a href="/checkout/{{user._id}}" class="btn">Place your order</a>
+    <a href="/products" class="btn">Go back</a>
+
+</div>

@@ -7,9 +7,6 @@ const isLoggedIn = require('../middleware/auth');
 // User Model
 const userModel = require('../models/User');
 
-// Cart Model
-const cartModel = require('../models/Cart');
-
 const bcrypt = require('bcryptjs');
 
 // Sign Up Routes
@@ -169,13 +166,7 @@ router.post('/login', (req, res) => {
         });
     }
     else {
-
-        /*
-       Here is whre we have to determine if the email and the password exists.
-       If it does, create session, assign the user object(document) to session
-       then redirect user
-        */
-
+        
         userModel.findOne({ email: req.body.email })
             .then((user) => {
 
@@ -221,23 +212,6 @@ router.post('/login', (req, res) => {
 
     }
 });
-
-
-router.post('/shoppingCart/:id', (req, res) => {
-    // pass the id of the product to the shoppingcart array
-    // each user has a shopping cart
-    
-    const { _id, productId, productName, productDesc, productCategory, productPic, productPrice, productQuantity } = req.body;
-
-    //console.log(req.body.productName);
-
-
-    cartModel.findById({id:req.params.id})
-        
-
-
-});
-
 
 // Confirmation Route
 router.get("/confirm/:id", (req, res) => {

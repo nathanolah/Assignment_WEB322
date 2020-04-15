@@ -1,41 +1,44 @@
-const mongoose = require('mongoose');
+//
+module.exports = function cart(oldCart) {
+    if (oldCart.products != undefined) {
+        this.products = oldCart.products;
+    }
+    else {
+        this.products = {};
+    };
 
-// const cartSchema = new mongoose.Schema({
+    this.totalQuantity = oldCart.totalQuantity || 0;
+    this.totalPrice = oldCart.totalPrice || 0;
+    this.imgSrc = oldCart.imgSrc || "";
 
+    this.add = function (product, id, price) {
+        var storedProduct = this.products[id];
 
-// })
-
-const Schema = mongoose.Schema;
-
-const cartSchema = new Schema({
-
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    products: [
-        {
-            //productId: Number, //?
-            productName: String,
-            productCategory: String,
-            productDesc: String,
-            productQuantity: String,
-            productPic: String,
-            productPrice: String
-            // bestseller??
+        if (!storedProduct) {
+            storedProduct = this.products[id] = {
+                products: product, qty: 0, price: 0
+            };
         }
-    ],
-    active: {
-        type: Boolean,
-        default: true
-    },
-    modifiedOn: {
-        type: Date,
-        default: Date.now()
+        storedProduct.qty++;
+        storedProduct.price = price * storedProduct.qty;
+
+        this.totalQuantity += 1;
+        this.totalPrice += storedProduct.price;
+
+    };
+
+    this.removeProduct = (id) => {
+        this.totalQuantity -= this.products[id].qty;
+        this.totalPrice -= this.products[id].price;
+        delete this.products[id];
     }
 
-})
+    this.generateArray = function () {
+        const arr = [];
+        for (var id in this.products) {
+            arr.push(this.products[id]);
+        }
+        return arr;
+    }
 
-const cartModel = mongoose.model('Cart', cartSchema);
-
-module.exports = cartModel;
+}

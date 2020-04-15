@@ -10,6 +10,8 @@ const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
 const session = require('express-session')
 
+const MongoStore = require('connect-mongo')(session); 
+
 // Load the environment file
 require('dotenv').config({ path: "./config/keys.env" });
 
@@ -29,7 +31,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-app.use((req, res, next) => { // next means to move to the next middleware function
+app.use((req, res, next) => {
 
     if (req.query.method == "PUT") {
         req.method = "PUT"
@@ -39,25 +41,26 @@ app.use((req, res, next) => { // next means to move to the next middleware funct
         req.method = "DELETE"
     }
 
-    next(); // if you do not call the next() then you'll never move on to the route
+    next();
 })
-
-
 
 app.use(fileUpload());
 
 app.use(session({
     secret: `${process.env.SESSION_KEY}`,
     resave: false,
-    saveUninitialized: true
-    //cookie: { secure: true } 
+    saveUninitialized: true,
+    //cookie: { secure: true }
+    
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: { maxAge: 180 * 60 * 1000 }
 }))
 
 //custom middleware functions
 app.use((req, res, next) => {
-    //res.locals.user is a global handlebars variable. This means that ever single handlebars file can access 
-    //that user variable
+    //res.locals.user is a global handlebars variable
     res.locals.user = req.session.user;
+    res.locals.session = req.session;
 
     next();
 });
