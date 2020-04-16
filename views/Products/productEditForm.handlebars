@@ -1,37 +1,51 @@
- <h2>Update Product</h2>
- <div>
-    {{#if errors}}
-        <div class="errors">{{errors}}</div>
-    {{/if}}
- </div>
- 
-    <form method="POST" action="/products/update/{{_id}}?method=PUT" enctype="multipart/form-data">
+<div class="form-header"><h2>Edit product</h2></div>
+<div class="form">
+      <div>
+            {{#if errors}}
+                <div class="errors">{{errors}}</div>
+            {{/if}}
+        </div>
 
-        <label>Product Category</label>
-        <select name="productCategory" id="productCategory">
-            <option value="Household Supplies">Household Supplies</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Tools">Tools</option>
-        </select>
-        <br><br>
+        <form method="POST" action="/products/update/{{_id}}?method=PUT" enctype="multipart/form-data">
+            <ul class="form-style-1">
+                <li>
+                    <label for="productCategory">Product Category<span class="required">*</span></label>
+                    <select name="productCategory" id="productCategory">
+                        <option value="Household Supplies">Household Supplies</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Tools">Tools</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="productName">Product Name<span class="required">*</span></label>
+                    <input type="text" name="productName" id="productName" class="field-long" value={{productName}}>
+                </li>
+                <li>
+                    <label for="productPrice">Product Price<span class="required">*</span></label>
+                    <input type="text" name="productPrice" id="productPrice" class="field-long" value={{productPrice}}>
+                </li>
+                <li>
+                    <label for="productDesc">Product Description<span class="required">*</span></label>
+                    <textarea id="productDesc" name="productDesc" class="field-long" value="{{productDesc}}"></textarea>
+                </li>
+                <li>
+                    <label for="productQuantity">Product Quantity<span class="required">*</span></label>
+                    <input type="number" value="1" id="productQuantity" name="productQuantity" value="{{productQuantity}}">
+                </li>
+                <li>
+                    <label for="bestSeller">Best Seller<span class="required">*</span></label>
+                    <input type="checkbox" id="bestSeller" name="bestSeller" value="true">
+                </li>
+                <li>
+                    <label for="productPic">Upload Photo<span class="required">*</span></label>
+                    <input type="file" name="productPic" id="productPic">
+                </li>
+                <br>
+                <li>
+                    <input type="submit" value="Add Product">
+                </li>
+            </ul>
+            
+        </form>
 
-        <label>Product Name</label>
-        <input type="text" name="productName" id="productName" value="{{productName}}"> <br><br>
-
-        <label>Product Price $</label>
-        <input type="text" name="productPrice" id="productPrice" value="{{productPrice}}"> <br><br>
-
-        <label>Product Description</label>
-        <textarea id="productDesc" name="productDesc" value="{{productDesc}}"></textarea><br><br>
-
-        <label>Product Quantity</label>
-        <input type="number" value="1" id="productQuantity" name="productQuantity" value="{{productQuantity}}"><br><br>
-        
-        <label>Best Seller</label>
-        <input type="checkbox" id="bestSeller" name="bestSeller" value="true"><br><br>
-
-        <label>Upload Photo</label>
-        <input type="file" name="productPic" id="productPic" ><br><br>
-       
-        <input type="submit" value="Update Product">
-    </form>
+</div>

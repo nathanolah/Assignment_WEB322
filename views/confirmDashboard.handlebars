@@ -1,9 +1,8 @@
 {{!-- Confirmation Page --}}
+<a class="btn" href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a> <a class="btn" href="/user/logout">Logout </a>
 <div class="dashboard">
     <h3>Thank you {{user.firstName}} for signing up with the Everything Store</h3>
     <p>A confirmation email has been sent to {{user.email}}</p>
 </div>
 
-{{!-- FIX DESIGN --}}
-<li><a href="/user/profile/{{user._id}}">{{user.firstName}}'s Profile</a></li>
-<li><a href="/user/logout">Logout </a></li>
+

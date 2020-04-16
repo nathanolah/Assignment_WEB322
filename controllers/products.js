@@ -111,69 +111,21 @@ router.get('/add', (req, res) => {
 
 });
 
-//
+// Add prodcuts post method
 router.post('/add', (req, res) => {
-    // Inserts into database
-
-    // Create product object
-    const newProduct = {
-
-        productName: req.body.productName,
-        productPrice: req.body.productPrice,
-        productDesc: req.body.productDesc,
-        productCategory: req.body.productCategory,
-        productQuantity: req.body.productQuantity,
-        bestSeller: req.body.bestSeller
-
+    const errorMessage = [];
+    const { productName, productCategory, productDesc, productPrice, productQuantity, bestSeller } = req.body;
+    if (productName == "") {
+        errorMessage.push('Product name must be filled');
     }
-
-    req.files.productPic.name = `prod_pic_${newProduct._id}${path.parse(req.files.productPic.name).ext}`;
-    let str = req.files.productPic.name;
-
-    // Check file extension
-    const patt = /\.[0-9a-z]+$/i;
-    let fileType = str.match(patt);
-
-    // TODO : CHECK FOR THE EMPTY FIELDS ASWELL
-    // TODO : FIX ERROR DIV IN EDIT/ADD HANDLEBARS
-    // TODO : CHANGE FORM APPEARANCE IN EDIT/ADD
-
-    if (fileType == '.jpg' || fileType == '.png' || fileType == '.gif') {
-
-        const product = new productsModel(newProduct);
-        product.save()
-            .then((product) => {
-    
-                req.files.productPic.mv(`public/uploads/${req.files.productPic.name}`)
-                    .then(() => {
-                        productsModel.updateOne({ _id: product._id }, {
-                            productPic: req.files.productPic.name
-                        })
-                            .then(() => {
-                                res.redirect('/products');
-                            })
-                            .catch(err => console.log(`${err}`));
-    
-    
-                    })
-                    .catch(err => console.log(`${err}`));
-    
-                console.log(`Product inserted into database`);
-    
-    
-            })
-            .catch(err => console.log(`${err}`));
-
+    if (productPrice == "") {
+        errorMessage.push('Product price must be filled');
     }
-    else {
-        const errorMessage = 'Invalid file extension, must be .jpg, .gif, or .png';
-        const { _id, productName, productCategory, productDesc, productPrice, productQuantity, bestSeller } = newProduct;
-    
+    if (errorMessage.length > 0) {
         res.render('Products/productAddForm', {
             title: `Add Product`,
             logo: "../../img/everythingStore.jpg",
             errors: errorMessage,
-            _id,
             productName,
             productCategory,
             productDesc,
@@ -183,7 +135,80 @@ router.post('/add', (req, res) => {
     
         });
 
+    } 
+    else {
+        // Inserts into database
+    
+        // Create product object
+        const newProduct = {
+    
+            productName: req.body.productName,
+            productPrice: req.body.productPrice,
+            productDesc: req.body.productDesc,
+            productCategory: req.body.productCategory,
+            productQuantity: req.body.productQuantity,
+            bestSeller: req.body.bestSeller
+    
+        }
+    
+        req.files.productPic.name = `prod_pic_${newProduct._id}${path.parse(req.files.productPic.name).ext}`;
+        let str = req.files.productPic.name;
+    
+        // Check file extension
+        const patt = /\.[0-9a-z]+$/i;
+        let fileType = str.match(patt);
+    
+        if (fileType == '.jpg' || fileType == '.png' || fileType == '.gif') {
+    
+            const product = new productsModel(newProduct);
+            product.save()
+                .then((product) => {
+        
+                    req.files.productPic.mv(`public/uploads/${req.files.productPic.name}`)
+                        .then(() => {
+                            productsModel.updateOne({ _id: product._id }, {
+                                productPic: req.files.productPic.name
+                            })
+                                .then(() => {
+                                    res.redirect('/products');
+                                })
+                                .catch(err => console.log(`${err}`));
+        
+                        })
+                        .catch(err => console.log(`${err}`));
+        
+                    console.log(`Product inserted into database`);
+        
+        
+                })
+                .catch(err => console.log(`${err}`));
+    
+        }
+        else {
+            errorMessage.push('Invalid file extension, must be .jpg, .gif, or .png');
+    
+            //const errorMessage = 'Invalid file extension, must be .jpg, .gif, or .png';
+            const { _id, productName, productCategory, productDesc, productPrice, productQuantity, bestSeller } = newProduct;
+        
+            res.render('Products/productAddForm', {
+                title: `Add Product`,
+                logo: "../../img/everythingStore.jpg",
+                errors: errorMessage,
+                _id,
+                productName,
+                productCategory,
+                productDesc,
+                productPrice,
+                productQuantity,
+                bestSeller
+        
+            });
+    
+        }
+
+
     }
+    
 
 });
 
@@ -262,8 +287,7 @@ router.put('/update/:id', (req, res) => {
             productDesc,
             productPrice,
             productQuantity,
-            bestSeller
-
+            bestSeller,
         });
 
     }

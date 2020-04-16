@@ -16,22 +16,22 @@ module.exports = function cart(oldCart) { // (sessionCart)
         var storedProduct = this.products[id];
 
         if (!storedProduct) {
-            // storedProduct = this.products[id] = {
-            //     products: product, qty: 0, price: 0
-            // };
+            storedProduct = this.products[id] = {
+                products: product, qty: 0, price: 0
+            };
 
             //FIX THIS
             //storedProduct = products[id] = product;
-            console.log(products)
+            // console.log(products)
 
-            if (products[id] != undefined){
-            }
-            else {
-                storedProduct = this.products[id] = {
-                    products: product, qty: 0, price: 0
-                };
+            // if (products[id] != undefined){
+            // }
+            // else {
+            //     storedProduct = this.products[id] = {
+            //         products: product, qty: 0, price: 0
+            //     };
 
-            }
+            // }
         }
         storedProduct.qty++;
         storedProduct.price = price * storedProduct.qty;

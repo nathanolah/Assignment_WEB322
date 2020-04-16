@@ -18,8 +18,18 @@
                         <li><img src={{logo}} alt=""></li> 
                         <li><a href="/">Home</a></li>
                         <li><a href="/products">Products</a></li>
-                        <li><a href="/user/signup" >Sign up</a></li> 
-                        <li><a href="/user/login">Login</a></li>
+                        {{#if user}}
+                            {{#if user.inventoryClerk}}
+                                <li><a href="/user/profile/{{user._id}}">{{user.firstName}}</a></li>
+                                <li><a href="/user/logout">Logout</a></li>
+                            {{else}}
+                                <li><a href="/user/profile/{{user._id}}">{{user.firstName}}</a></li>
+                                <li><a href="/user/logout">Logout</a></li>
+                            {{/if}}
+                        {{else}}
+                            <li><a href="/user/signup" >Sign up</a></li> 
+                            <li><a href="/user/login">Login</a></li>
+                        {{/if}}
                     </ul>
                 </nav>
             </section>

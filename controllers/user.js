@@ -109,7 +109,8 @@ router.post('/signup', (req, res) => {
                                 from: `noreply@everythingstore.com`,
                                 subject: 'Everything Store Confirmation',
                                 html:
-                                    `<h3>Thank you ${firstName} ${lastName} for signing up with the Everything Store.<h3> <br> 
+                                    `<h3>Thank you ${firstName} ${lastName} for signing up with the Everything Store.<h3> <br>
+                                    <a href="https://everythingstoreweb322.herokuapp.com/user/profile/${user._id}">${firstName}'s Profile</a> 
                                 `,
                             };
                             // Sends email

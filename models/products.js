@@ -35,6 +35,11 @@ const productSchema = new Schema({
     bestSeller: {
         type: Boolean,
         default: false
+    },
+
+    dateCreated: {
+        type: Date,
+        default: Date.now()
     }
 
 
