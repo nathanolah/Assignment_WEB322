@@ -1,12 +1,11 @@
     
-    <div>
-
-        
+    <h2>Add Product</h2> 
+     <div>
+        {{#if errors}}
+            <div class="errors">{{errors}}</div>
+        {{/if}}
     </div>
 
-
-    <h2>Add Product</h2> 
-    
     <form method="POST" action="/products/add" enctype="multipart/form-data">
 
         <label>Product Category</label>

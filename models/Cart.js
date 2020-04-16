@@ -1,5 +1,5 @@
 //
-module.exports = function cart(oldCart) {
+module.exports = function cart(oldCart) { // (sessionCart)
     if (oldCart.products != undefined) {
         this.products = oldCart.products;
     }
@@ -11,13 +11,27 @@ module.exports = function cart(oldCart) {
     this.totalPrice = oldCart.totalPrice || 0;
     this.imgSrc = oldCart.imgSrc || "";
 
+    // Add function
     this.add = function (product, id, price) {
         var storedProduct = this.products[id];
 
         if (!storedProduct) {
-            storedProduct = this.products[id] = {
-                products: product, qty: 0, price: 0
-            };
+            // storedProduct = this.products[id] = {
+            //     products: product, qty: 0, price: 0
+            // };
+
+            //FIX THIS
+            //storedProduct = products[id] = product;
+            console.log(products)
+
+            if (products[id] != undefined){
+            }
+            else {
+                storedProduct = this.products[id] = {
+                    products: product, qty: 0, price: 0
+                };
+
+            }
         }
         storedProduct.qty++;
         storedProduct.price = price * storedProduct.qty;
@@ -27,6 +41,7 @@ module.exports = function cart(oldCart) {
 
     };
 
+    // Remove 
     this.removeProduct = (id) => {
         this.totalQuantity -= this.products[id].qty;
         this.totalPrice -= this.products[id].price;

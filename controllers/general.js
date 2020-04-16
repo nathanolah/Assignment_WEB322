@@ -63,17 +63,26 @@ router.get('/shoppingCart/:id', (req, res) => {
 
 })
 
+// FIX THIS
 router.get('/checkout/:id', (req, res) => {
-    const cart = req.session.cart;
-    //const cart = new Cart(req.session.cart ? req.session.cart : {});
+    //const cart = req.session.cart;
+    const cart = new Cart(req.session.cart ? req.session.cart : {});
 
+    console.log(cart.length);
+    console.log(JSON.stringify(cart));
+    console.log('ok');
 
     // for (let i in cart) {
     //     console.log(cart[]);
     // }
 
-
-    req.session.cart = null;
+    cart = null;
+    //req.session.cart = null;
+    
+    // res.render('User/confirmPurchase', {
+    //     title: `Purchase`,
+    //     logo: `../img/everythingstore.jpg`
+    // });
     res.redirect('/products'); // redirect to email sent page
 });
 

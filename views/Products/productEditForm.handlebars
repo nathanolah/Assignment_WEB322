@@ -1,4 +1,10 @@
  <h2>Update Product</h2>
+ <div>
+    {{#if errors}}
+        <div class="errors">{{errors}}</div>
+    {{/if}}
+ </div>
+ 
     <form method="POST" action="/products/update/{{_id}}?method=PUT" enctype="multipart/form-data">
 
         <label>Product Category</label>
@@ -25,7 +31,7 @@
         <input type="checkbox" id="bestSeller" name="bestSeller" value="true"><br><br>
 
         <label>Upload Photo</label>
-        <input type="file" name="productPic" id="productPic"><br><br>
+        <input type="file" name="productPic" id="productPic" ><br><br>
        
         <input type="submit" value="Update Product">
     </form>
