@@ -116,8 +116,6 @@ router.post('/signup', (req, res) => {
                             // Sends email
                             sgMail.send(msg)
                                 .then(() => {
-
-
                                     console.log(`Email has been sent`)
                                 })
                                 .catch(err => { console.log(`${err}`) });

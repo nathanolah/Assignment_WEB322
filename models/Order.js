@@ -13,7 +13,12 @@ const orderSchema = new Schema({
     },
     name: {
         type: String,
-        require: true
+        //require: true
+    },
+
+    dateCreated: {
+        type: Date,
+        default: Date.now()
     }
 
 });

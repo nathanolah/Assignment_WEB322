@@ -38,9 +38,11 @@
 <section class="boxes">
     {{#each products}}
         <div class="box">
+        <a href="/products" class="aProductBox" style="display:block">
         <h3>{{this.productCategory}}</h3>
         <img src="uploads/{{this.productPic}}" alt="">
-        <a href="/products" class=btn>Explore now</a>
+        <a href="/products" class="btn">Explore</a>
+        </a>
         </div>
     {{/each}}
 

@@ -61,103 +61,76 @@ router.get('/shoppingCart/:id', (req, res) => {
 
     });
 
-})
-
-// FIX THIS
-router.get('/checkout/:id', (req, res) => {
-    //const cart = req.session.cart;
-    // const cart = new Cart(req.session.cart ? req.session.cart : {});
-
-    // console.log(cart.length);
-    // console.log(JSON.stringify(cart));
-    // console.log('ok');
-
-    // for (let i in cart) {
-    //     console.log(cart[]);
-    // }
-
-    //cart = null;
-    
-    req.session.cart = null;
-    
-    // res.render('User/confirmPurchase', {
-    //     title: `Purchase`,
-    //     logo: `../img/everythingstore.jpg`
-    // });
-    res.redirect('/products'); // redirect to email sent page
 });
 
-router.get('/checkout_/:id', (req, res) => {
-
-    //const userId = req.params.id;
-    //const cart = req.session.cart;
-    const cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    
-    // for (product in cart.products) {
-        //     console.log(product.products);
-        // }
-        
+// Checkout
+router.get('/checkout/:id', (req, res) => {
     userModel.findById(req.params.id)
-    .then((user) => {
-        console.log(`${user.firstName} ${user.lastName} ${user.email}`)
-        
-        const order = new Order({
-            user: user._id,
-            cart: cart,
-            name: `${user.firstName} ${user.lastName}`
-        })
-        order.save((err, result) => {
+        .then((user) => {
 
-            console.log('saved order');
+            const cart = new Cart(req.session.cart ? req.session.cart : {});
+            var products = cart.generateArray();
+            var totalPrice = cart.totalPrice;
+
             req.session.cart = null;
-            res.redirect('/products');
-        })
-        
-        // using Twilio SendGrid's v3 Node.js Library
-        // https://github.com/sendgrid/sendgrid-nodejs
-                // const sgMail = require('@sendgrid/mail');
-                // sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
-                // const msg = {
-                //     to: `${user.email}`,
-                //     from: `noreply@everythingstore.com`,
-                //     subject: 'Everything Store Purchase Confirmation',
-                //     html:
-                //         `<h3>Thank you ${user.firstName} ${user.lastName} for signing up with the Everything Store.<h3> <br> 
-                //                             `,
 
+            // Save order
+            const order = new Order({
+                user: user._id,
+                cart: cart,
+                name: `${user.firstName} ${user.lastName}`
+            })
+            order.save((err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                console.log('saved order');
+            })
+
+            let emailBody;
+            for (let i in products) {
+                if (products[i].products != undefined) {
+                    emailBody += `
+                    <h1>${products[i].products.productCategory}</h1>
+                    <h1>${products[i].products.productName}</h1>
+                    <p>${products[i].products.productDesc}</p>
+                    <p>Quantity: ${products[i].products.productQuantity}</p>
+                    <h1>$${products[i].products.productPrice}</h1>
+
+                    <br>
+                    `;
+                }
+            }
+
+            // using Twilio SendGrid's v3 Node.js Library
+            // https://github.com/sendgrid/sendgrid-nodejs
+            const sgMail = require('@sendgrid/mail');
+            sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
+            const msg = {
+                to: `${user.email}`,
+                from: `noreply@everythingstore.com`,
+                subject: 'Everything Store Purchase Confirmation',
+                html:
+                    `<h3>Thank you ${user.firstName} ${user.lastName} for your purchase.<h3> <br>
                     
-                        
-                // };
-            
-                // // Sends email
-                // sgMail.send(msg)
-                //     .then(() => {
-                //         // REDIRECT TO CONFIRMATION PAGE OF PURCHASE EMAIL
-                //         //CONTINUE
+                    ${emailBody}
+                
+                    <h1>Total Price $${totalPrice}</h1>
 
+                    `,
 
-            
-                //         console.log(`Email has been sent`)
-                //     })
-                //     .catch(err => { console.log(`${err}`) });
+            };
+            // Sends email
+            sgMail.send(msg)
+                .then(() => {
+                    res.redirect('/products');
+                    console.log(`Email has been sent`)
+                })
+                .catch(err => { console.log(`${err}`) });
 
         })
-        .catch(err=>console.log(err));
-
-
-    // clear the cart
-    // for (product in cart.products) {
-    //     //console.log(product);
-    //     cart.removeProduct(product);
-    // }
-
-    //console.log(cart.products);
-
-    // send email of checkout
-    res.redirect('/products');
-
-
+        .catch(err => console.log(err));
 });
 
 // Add to cart
@@ -174,7 +147,7 @@ router.get('/addToCart/:id', (req, res) => {
         res.redirect("/products")
     });
 
-}); 
+});
 
 // Remove product from cart
 router.get("/remove/:id", (req, res) => {
