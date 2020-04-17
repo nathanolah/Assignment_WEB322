@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const isClerkLoggedIn = require('../middleware/clerkauth');
 
 const router = express.Router();
 
@@ -103,7 +104,7 @@ router.post('/search', (req, res) => {
 })
 
 // Add products
-router.get('/add', (req, res) => {
+router.get('/add', isClerkLoggedIn, (req, res) => {
     res.render('Products/productAddForm', {
         title: 'Add Product',
         logo: "../img/everythingStore.jpg"
@@ -112,7 +113,7 @@ router.get('/add', (req, res) => {
 });
 
 // Add prodcuts post method
-router.post('/add', (req, res) => {
+router.post('/add', isClerkLoggedIn, (req, res) => {
     const errorMessage = [];
     const { productName, productCategory, productDesc, productPrice, productQuantity, bestSeller } = req.body;
     if (productName == "") {
@@ -213,7 +214,7 @@ router.post('/add', (req, res) => {
 });
 
 // Update Products route
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id', isClerkLoggedIn, (req, res) => {
 
     productsModel.findById(req.params.id)
         .then((product) => {
@@ -237,7 +238,7 @@ router.get('/edit/:id', (req, res) => {
 })
 
 // Update product document
-router.put('/update/:id', (req, res) => {
+router.put('/update/:id', isClerkLoggedIn, (req, res) => {
 
     const product = {
         _id: req.params.id,
@@ -295,7 +296,7 @@ router.put('/update/:id', (req, res) => {
 });
 
 // Delete product
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id', isClerkLoggedIn, (req, res) => {
     productsModel.deleteOne({ _id: req.params.id })
         .then(() => {
             res.redirect('/products');

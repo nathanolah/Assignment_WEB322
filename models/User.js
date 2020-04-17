@@ -45,7 +45,7 @@ const userSchema = new Schema({
 userSchema.pre('save', function (next) {
     
     //salt random generated characters or strings
-    bcrypt.genSalt(10)
+    bcrypt.genSalt(12)
         .then((salt) => {
 
             bcrypt.hash(this.password, salt)

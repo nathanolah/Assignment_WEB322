@@ -213,7 +213,7 @@ router.post('/login', (req, res) => {
 });
 
 // Confirmation Route
-router.get("/confirm/:id", (req, res) => {
+router.get("/confirm/:id", isLoggedIn, (req, res) => {
 
     res.render("confirmDashboard", {
         title: 'Sign Up',

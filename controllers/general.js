@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const isLoggedIn = require('../middleware/auth');
 
 // Products Model
 const productsModel = require('../models/products');
@@ -43,7 +44,7 @@ router.get('/', (req, res) => {
 });
 
 // Shopping Cart Routes
-router.get('/shoppingCart/:id', (req, res) => {
+router.get('/shoppingCart/:id', isLoggedIn, (req, res) => {
     if (!req.session.cart) {
         return res.render('User/shoppingCart', {
             title: `Shopping Cart`,
@@ -64,7 +65,7 @@ router.get('/shoppingCart/:id', (req, res) => {
 });
 
 // Checkout
-router.get('/checkout/:id', (req, res) => {
+router.get('/checkout/:id', isLoggedIn, (req, res) => {
     userModel.findById(req.params.id)
         .then((user) => {
 
@@ -72,7 +73,7 @@ router.get('/checkout/:id', (req, res) => {
             var products = cart.generateArray();
             var totalPrice = cart.totalPrice;
 
-            req.session.cart = null;
+            req.session.cart = null; //Clear cart
 
             // Save order
             const order = new Order({
@@ -80,7 +81,7 @@ router.get('/checkout/:id', (req, res) => {
                 cart: cart,
                 name: `${user.firstName} ${user.lastName}`
             })
-            order.save((err, result) => {
+            order.save((err) => {
                 if (err) {
                     console.log(err);
                 }
@@ -90,16 +91,19 @@ router.get('/checkout/:id', (req, res) => {
 
             let emailBody;
             for (let i in products) {
-                if (products[i].products != undefined) {
+                if (products[i] == undefined) {
+                    emailBody += "";
+                } else {
                     emailBody += `
                     <h1>${products[i].products.productCategory}</h1>
-                    <h1>${products[i].products.productName}</h1>
+                    <h3>${products[i].products.productName}</h3>
                     <p>${products[i].products.productDesc}</p>
-                    <p>Quantity: ${products[i].products.productQuantity}</p>
-                    <h1>$${products[i].products.productPrice}</h1>
+                    <p>Quantity: ${products[i].qty}</p>
+                    <h3>$${products[i].products.productPrice}</h3>
 
                     <br>
                     `;
+                    
                 }
             }
 
@@ -116,7 +120,7 @@ router.get('/checkout/:id', (req, res) => {
                     
                     ${emailBody}
                 
-                    <h1>Total Price $${totalPrice}</h1>
+                    <h3>Total Price $${totalPrice}</h3>
 
                     `,
 
@@ -124,7 +128,7 @@ router.get('/checkout/:id', (req, res) => {
             // Sends email
             sgMail.send(msg)
                 .then(() => {
-                    res.redirect('/products');
+                    res.redirect(`/purchase/${user._id}`)
                     console.log(`Email has been sent`)
                 })
                 .catch(err => { console.log(`${err}`) });
@@ -133,8 +137,18 @@ router.get('/checkout/:id', (req, res) => {
         .catch(err => console.log(err));
 });
 
+// Purchase Confirmation Route
+router.get("/purchase/:id", isLoggedIn, (req, res) => {
+
+    res.render("User/purchaseConfirmation", {
+        title: 'Checkout',
+        logo: "../img/everythingStore.jpg"
+
+    });
+})
+
 // Add to cart
-router.get('/addToCart/:id', (req, res) => {
+router.get('/addToCart/:id', isLoggedIn, (req, res) => {
     const productId = req.params.id;
     const cart = new Cart(req.session.cart ? req.session.cart : {}); // Check if cart exists
 
@@ -150,7 +164,7 @@ router.get('/addToCart/:id', (req, res) => {
 });
 
 // Remove product from cart
-router.get("/remove/:id", (req, res) => {
+router.get("/remove/:id", isLoggedIn, (req, res) => {
     const productId = req.params.id;
     const cart = new Cart(req.session.cart ? req.session.cart : {});
     cart.removeProduct(productId);
