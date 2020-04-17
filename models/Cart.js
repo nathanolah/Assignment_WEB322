@@ -9,7 +9,6 @@ module.exports = function cart(previousCart) {
 
     this.totalQuantity = previousCart.totalQuantity || 0;
     this.totalPrice = previousCart.totalPrice || 0;
-    this.imgSrc = previousCart.imgSrc || "";
 
     // Add function
     this.add = function (product, id, price) {
